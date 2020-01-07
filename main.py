@@ -62,12 +62,13 @@ if __name__ == "__main__":
 	state.add_argument('--set-security', action='store_true', help='Set up RSA certificates')
 
 	publisher_control = publisher.add_mutually_exclusive_group(required=True)
-	publisher.add_argument('-f', '--file', help='filepath for file in seeker mode')
+	publisher.add_argument('-f', '--file', help='filepath for file in seeker mode', required=True)
 	publisher_control.add_argument('--markdown', action='store_true', help='HTMl or .md Markdown files')
 	publisher_control.add_argument('--object', action='store_true', help='Any general file (usually signatures or encrypted files)')
 	publisher_control.add_argument('--broadcast', action='store_true', help='Broadcast message, use .txt for publishing message')
 	publisher_control.add_argument('--tag-summary', action='store_true', help='get tag summary from markdown, html and text files')
 	publisher_control.add_argument('--media', action='store_true', help='Media file')
+	publisher_control.add_argument('--delete', action='store_true', help='Delete a certain file')
 
 	seeker_control = seeker.add_mutually_exclusive_group(required=True)
 	seeker.add_argument('--search-tag', help="Search using a particular tag")
@@ -95,10 +96,55 @@ if __name__ == "__main__":
 		Server().process(op)
 
 	elif args.mode == 'publisher':
-		pass
+		content = ""
+		if args.media:
+			content = "media"
+		elif args.markdown:
+			content = "markdown"
+		elif args.broadcast:
+			content = "broadcast"
+		elif args.object:
+			content = "file"
+		elif args.delete:
+			content = "shred"
+		else:
+			content = "tag-search"
+		
+		Publisher().process(content, args.file)
 		
 	elif args.mode == 'seeker':
-		pass
+		seeker = Seeker()
+
+		if args.search:
+			if not (args.search_tag or args.search_name or args.search_hash):
+				print(colored.red("[!] Atleast one of tag, name or file hash is require for search"))
+				exit(0)
+			data = {}
+			if args.search_hash:
+				data["hash"] = args.search_hashe
+			else:
+				data["hash"] = None
+			
+			if args.search_name:
+				data["name"] = args.search_name
+			else:
+				data["name"] = None
+
+			if args.search_tag:
+				data["tag"] = args.search_tag
+			else:
+				data["tag"] = None
+
+			seeker.process("search", data)
+			
+		elif args.fetch:
+
+			if not (args.url and args.fname):
+				print(colored.red("[!] Both filename and url are required."))
+				exit(0)
+			data = {"url": args.url, "filename": args.fname}
+			seeker.process("fetch", data)
+
 	else:
 		print(colored.red("[!] No Such Config!!"))
 
