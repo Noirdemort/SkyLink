@@ -75,17 +75,17 @@ def search():
 	if keyword:
 		files.extend(_process_search(keyword))
 	
-	results = ",".join([f'{i["hash"]} {i["file"].split("/")[-1]}' for i in files])
+	results = "\n".join([f'{i["hash"]} {i["file"].split("/")[-1]}' for i in files])
 	return results
 	
 
-@app.route('/fetch', methods=['GET'])
-def fetch():
+@app.route('/fetch/<file_signature>', methods=['GET'])
+def fetch(file_signature):
 	if request.method != "GET":
 		return "Method not supported. Use GET HTTP Method."
-	file_hash = request.params.get("file_signature")
-	if file_hash:
-		files = _process_search(file_hash)[0]
+		
+	if file_signature:
+		files = _process_search(file_signature)[0]
 		return send_file(files["filepath"], attachment_filename=files["filepath"].split("/")[-1])
 	return "No file found!!", 404
 

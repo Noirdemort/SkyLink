@@ -74,6 +74,7 @@ if __name__ == "__main__":
 	seeker.add_argument('--search-hash', help="Search for specific hash over the network")
 	seeker.add_argument('--search-name', help="Search using a name")
 	seeker.add_argument('--url', help="URL to fetch file")
+	seeker.add_argument('--fname', help="Filename of downloaded file")
 	seeker_control.add_argument('--search', action='store_true', help="Search a file")
 	seeker_control.add_argument('--fetch', action='store_true', help="Fetch file from specific url, requires --url tag")
 
