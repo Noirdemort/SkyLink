@@ -12,7 +12,7 @@ class NetworkManager:
 		rt = []
 		
 		for ip in ip_strs:
-			rt.extend(re.findall("\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}", ip))
+			rt.extend(re.findall('[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}', ip))
 		
 		return list(set(rt))
 

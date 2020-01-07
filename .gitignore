@@ -3,3 +3,4 @@ __pycache__/
 key.pem
 cert.pem
 current.pid
+main.pyproject*
