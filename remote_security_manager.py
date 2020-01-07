@@ -6,7 +6,6 @@
 import os
 import libnacl
 import pynacl
-import libsodium
 
 
 class RemoteCertificateManager():

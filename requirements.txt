@@ -1,0 +1,7 @@
+prompt_toolkit
+Flask
+clint
+python-daemon
+pidlockfile
+libnacl
+pynacl
