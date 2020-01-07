@@ -5,22 +5,22 @@
 
 import os
 import libnacl
-import pynacl
+# import pynacl
 
 
 class CertificateManager(object):
 
-    def __init__(self):
-        pass
+	def __init__(self):
+		pass
 
-    def generate_certificates(self):
-        pass
+	def generate_certificates(self):
+		pass
 
-    def revoke_certificates(self):
-        pass
+	def revoke_certificates(self):
+		pass
 
-    def check_certificates(self):
-        pass
+	def check_certificates(self):
+		pass
 
-    def verify_certificates(self):
-        pass
+	def verify_certificates(self):
+		pass

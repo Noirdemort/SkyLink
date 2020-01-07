@@ -36,69 +36,69 @@ from seeker import Seeker
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog='skylink', description="SkyLink: Router Area Network")
+	parser = argparse.ArgumentParser(prog='skylink', description="SkyLink: Router Area Network")
 
-    # parser.add_argument("mode", type=str, choices=["services", "publisher", "seeker"], help="Mode of operation for the skylink")
+	# parser.add_argument("mode", type=str, choices=["services", "publisher", "seeker"], help="Mode of operation for the skylink")
 
-    subparsers = parser.add_subparsers(help='commands')
+	subparsers = parser.add_subparsers(help='commands')
 
-    # services = parser.add_argument_group(title='Services options')
-    # publisher = parser.add_argument_group(title='Publisher options')
-    # seeker = parser.add_argument_group(title='Seeker Options')
+	# services = parser.add_argument_group(title='Services options')
+	# publisher = parser.add_argument_group(title='Publisher options')
+	# seeker = parser.add_argument_group(title='Seeker Options')
 
-    services = subparsers.add_parser('services', help='SkyLink services and options')
-    services.set_defaults(mode='server')
-    
-    publisher = subparsers.add_parser('publisher', help="SkyLink publisher and options")
-    publisher.set_defaults(mode='publisher')
-    
-    seeker = subparsers.add_parser('seeker', help='SkyLink seeker and options')
-    seeker.set_defaults(mode='seeker')
+	services = subparsers.add_parser('services', help='SkyLink services and options')
+	services.set_defaults(mode='server')
+	
+	publisher = subparsers.add_parser('publisher', help="SkyLink publisher and options")
+	publisher.set_defaults(mode='publisher')
+	
+	seeker = subparsers.add_parser('seeker', help='SkyLink seeker and options')
+	seeker.set_defaults(mode='seeker')
 
-    state = services.add_mutually_exclusive_group(required=True)
-    state.add_argument('--start', action='store_true', help='Start the server')
-    state.add_argument('--stop', action='store_true', help='Stop the server')
-    state.add_argument('--restart', action='store_true', help='Restart the server')
-    state.add_argument('--set-security', action='store_true', help='Set up RSA certificates')
+	state = services.add_mutually_exclusive_group(required=True)
+	state.add_argument('--start', action='store_true', help='Start the server')
+	state.add_argument('--stop', action='store_true', help='Stop the server')
+	state.add_argument('--restart', action='store_true', help='Restart the server')
+	state.add_argument('--set-security', action='store_true', help='Set up RSA certificates')
 
-    publisher_control = publisher.add_mutually_exclusive_group(required=True)
-    publisher.add_argument('-f', '--file', help='filepath for file in seeker mode')
-    publisher_control.add_argument('--markdown', action='store_true', help='HTMl or .md Markdown files')
-    publisher_control.add_argument('--object', action='store_true', help='Any general file (usually signatures or encrypted files)')
-    publisher_control.add_argument('--broadcast', action='store_true', help='Broadcast message, use .txt for publishing message')
-    publisher_control.add_argument('--tag-summary', action='store_true', help='get tag summary from markdown, html and text files')
-    publisher_control.add_argument('--media', action='store_true', help='Media file')
+	publisher_control = publisher.add_mutually_exclusive_group(required=True)
+	publisher.add_argument('-f', '--file', help='filepath for file in seeker mode')
+	publisher_control.add_argument('--markdown', action='store_true', help='HTMl or .md Markdown files')
+	publisher_control.add_argument('--object', action='store_true', help='Any general file (usually signatures or encrypted files)')
+	publisher_control.add_argument('--broadcast', action='store_true', help='Broadcast message, use .txt for publishing message')
+	publisher_control.add_argument('--tag-summary', action='store_true', help='get tag summary from markdown, html and text files')
+	publisher_control.add_argument('--media', action='store_true', help='Media file')
 
-    seeker_control = seeker.add_mutually_exclusive_group(required=True)
-    seeker.add_argument('--search-tag', help="Search using a particular tag")
-    seeker.add_argument('--search-hash', help="Search for specific hash over the network")
-    seeker.add_argument('--search-name', help="Search using a name")
-    seeker.add_argument('--url', help="URL to fetch file")
-    seeker_control.add_argument('--search', action='store_true', help="Search a file")
-    seeker_control.add_argument('--fetch', action='store_true', help="Fetch file from specific url, requires --url tag")
+	seeker_control = seeker.add_mutually_exclusive_group(required=True)
+	seeker.add_argument('--search-tag', help="Search using a particular tag")
+	seeker.add_argument('--search-hash', help="Search for specific hash over the network")
+	seeker.add_argument('--search-name', help="Search using a name")
+	seeker.add_argument('--url', help="URL to fetch file")
+	seeker_control.add_argument('--search', action='store_true', help="Search a file")
+	seeker_control.add_argument('--fetch', action='store_true', help="Fetch file from specific url, requires --url tag")
 
-    # parser.add_argument('-p', '--pid-file', default='/var/run/eg_daemon.pid')
+	# parser.add_argument('-p', '--pid-file', default='/var/run/eg_daemon.pid')
 
-    args = parser.parse_args()
+	args = parser.parse_args()
 
-    if args.mode == 'server':
-        op = ""
-        if args.start:
-            op = 'start'
-        elif args.stop:
-            op = 'stop'
-        elif args.restart:
-            op = 'refresh'
-        else:
-            op = 'set_security'
-        Server().process(op)
+	if args.mode == 'server':
+		op = ""
+		if args.start:
+			op = 'start'
+		elif args.stop:
+			op = 'stop'
+		elif args.restart:
+			op = 'refresh'
+		else:
+			op = 'set_security'
+		Server().process(op)
 
-    elif args.mode == 'publisher':
-        pass
-        
-    elif args.mode == 'seeker':
-        pass
-    else:
-        print(colored.red("[!] No Such Config!!"))
+	elif args.mode == 'publisher':
+		pass
+		
+	elif args.mode == 'seeker':
+		pass
+	else:
+		print(colored.red("[!] No Such Config!!"))
 
-    sys.exit(0)
+	sys.exit(0)
