@@ -20,11 +20,18 @@ tags_db = db["tags"]
 
 @app.route("/")
 def home():
+	'''
+	Return simply a static string. Used for testing.
+	'''
 	return "SkyLink: RAreNet (Router Area Network)"
 
 
 @app.route("/media", methods=["GET"])
 def media():
+	'''
+	Search among media files. 
+	Accepts only HTTP GET request only.
+	'''
 	if request.method != "GET":
 		return "Method not supported. Use GET HTTP Method."
 	
@@ -35,6 +42,10 @@ def media():
 
 @app.route("/broadcast", methods=["GET"])
 def broadcast():
+	'''
+	Fetches for broadcast content.
+	Accepts HTTP GET request only
+	'''
 	if request.method != "GET":
 		return "Method not supported. Use GET HTTP Method."
 	
@@ -45,6 +56,9 @@ def broadcast():
 
 @app.route("/articles", methods=["GET"])
 def articles():
+	'''
+	Searches for ASCII text documents in the database.
+	'''
 	if request.method != "GET":
 		return "Method not supported. Use GET HTTP Method."
 	
@@ -58,6 +72,14 @@ def articles():
 
 @app.route('/search', methods=['GET'])
 def search():
+	'''
+	Performs a generic search using names, tag and hash value.
+
+	Accepts HTTP GET request only with certain parameters:
+		- search_hash: hash of file
+		- search_tag: any specific tag that the file may/can contain
+		- search_name: searches file with a possible filename
+	'''
 	if request.method != "GET":
 		return "Method not supported. Use GET HTTP Method."
 
@@ -81,9 +103,14 @@ def search():
 
 @app.route('/fetch/<file_signature>', methods=['GET'])
 def fetch(file_signature):
+	'''
+	Sends file with specific hash.
+	Accepts HTTP GET request with url parameter:
+		- file_signature which is a hash object
+	'''
 	if request.method != "GET":
 		return "Method not supported. Use GET HTTP Method."
-		
+
 	if file_signature:
 		files = _process_search(file_signature)[0]
 		return send_file(files["filepath"], attachment_filename=files["filepath"].split("/")[-1])
@@ -91,12 +118,19 @@ def fetch(file_signature):
 
 
 def _process_search(keyword):
+	'''
+	Private method for processing search with keyword.
+	:param keyword - type: str, can be a name, tag or hash
+
+	:return list: list of records matching with keyword
+	'''
 	search_expr = re.compile(f".*{keyword}.*", re.I)
 	search_request = {
 		{'file': {'$regex': search_expr}}, 
 		{'filepath': {'$regex': search_expr}}, 
 		{'type': {'$regex': search_expr}}
 	}
+
 	return list(files_db.find(search_request))
 
 
