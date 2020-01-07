@@ -34,7 +34,6 @@ class Publisher:
 		else:
 			print(colored.red("[!] No such node."))
 
-
 	def _publish_media(self, filepath):
 	   self._store_file(filepath, 'media')
 
@@ -60,6 +59,7 @@ class Publisher:
 		self.tags_db.insert(tag_record)
 
 	def _delete(self, filepath):
+		# TODO :- delete file from database also
 		if self._check_file(filepath):
 			Path(filepath).unlink()
 			return
