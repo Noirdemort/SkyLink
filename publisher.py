@@ -10,6 +10,12 @@ from hashlib import sha3_512 as sha
 
 class Publisher:
 
+	'''
+	Handles publishing of docuements and data from the user.
+
+	Uses file and db for storage of data.
+	'''
+
 	def __init__(self):
 		mongo_url = "mongodb://localhost:27017/"
 		client = pymongo.MongoClient(mongo_url)
@@ -44,11 +50,24 @@ class Publisher:
 		self._store_file(filepath, 'files')
 
 	def _publish_broadcast(self, filepath):
-		print(colored.cyan('[*] Enter message to broadcast (press esc then enter to stop writing)'))
-		message = prompt('>> ', multiline=True)
+		'''
+		Stores broadcast message directly in the db
+
+		:param filepath - type: str, a .txt file containing the broadcast message
+		'''
+		# print(colored.cyan('[*] Enter message to broadcast (press esc then enter to stop writing)'))
+		# message = prompt('>> ', multiline=True)
+		message = open(filepath, 'r').read().strip()
 		self.broadcast_db.insert({"broadcast": message, 'hash': self._sha_str(message)})
 
 	def _tag_compiler(self, filepath):
+		'''
+		Reads file, extract tags and store them in the database
+
+		:param filepath - type: str, path of file to be extracted
+
+		:return dict - consist of keys ["file", "tag", "hash"]
+		'''
 		text = open(filepath, 'r').read().strip().repalce('\n', '')
 		text = text.split(' ')
 		tags = list(filter(lambda x: x.startswith('#'), text))
@@ -56,9 +75,19 @@ class Publisher:
 		return {'file': filepath, 'tags': tags, 'hash': self._sha_file(filepath)}
 
 	def _tag_store(self, tag_record):
+		'''
+		Store extracted tag record in the db.
+
+		:param tag_record - type: dict, tag record to be inserted
+		'''
 		self.tags_db.insert(tag_record)
 
 	def _delete(self, filepath):
+		'''
+		Deletes file from computer as well as database using file hash.
+
+		:param filepath - type: str, path of file to be deleted
+		'''
 		# TODO :- delete file from database also
 		if self._check_file(filepath):
 			Path(filepath).unlink()
@@ -66,6 +95,12 @@ class Publisher:
 		print(colored.red("[!] No Such File exists!!"))
 
 	def _store_file(self, filepath, target_file):
+		'''
+		Stores file in database with its path, hash and type. Extract tags in case of ASCII text
+
+		:param filepath - type: str, path of file to be stored
+		:target_file - type: str, indicates type of file and suitable node for storage
+		'''
 		if not self._check_file(filepath):
 			print(colored.red("[!] No Such File exists!!"))
 			return
@@ -81,11 +116,24 @@ class Publisher:
 			self._tag_store(tag_record)
 		
 	def _check_file(self, filepath):
+		'''
+		Returns if a file at a given path exists
+
+		:param filepath - type: str, path of file to be checked for existence
+		:return bool
+		'''
 		if Path(filepath).is_file():
 			return True
 		return False
 
 	def _sha_file(self, filepath):
+		'''
+		Return sha3_512 hash of a given file
+
+		:param filepath - type: str, file path
+
+		:return str - hash of given file
+		'''
 		if not self._check_file(filepath):
 			print(colored.red("[!] No Such File exists!!"))
 			return
@@ -99,6 +147,13 @@ class Publisher:
 		return shall.hexdigest()
 
 	def _sha_str(self, text):
+		'''
+		Return sha3_512 of given text.
+
+		:param text - type: str, target text
+
+		:return str - hash of given string
+		'''
 		return sha(text.encode()).hexdigest()
 
 
