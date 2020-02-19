@@ -21,6 +21,7 @@ class Seeker:
 		self.ips = self.net_manager.filter_active_server(ip_list)
 		print(colored.green("[+] Successfully extracted active servers."))
 
+
 	def process(self, operation, data):
 		'''
 		Receives argument from command line parser.
@@ -31,8 +32,11 @@ class Seeker:
 			self._search_net(tag=data["tag"], name=data["name"], hash_val=data["hash"])
 		elif operation == 'fetch':
 			self._fetch_resource(data['url'], data['filename'])
+		elif operation == 'news':
+			self._get_broadcasts()
 		else:
 			print(colored.red("[!] Operation not found!!"))
+	
 
 	def _search_net(self, tag=None, name=None, hash_val=None):
 		'''
@@ -45,12 +49,25 @@ class Seeker:
 
 		'''
 		# TODO:- find an efficient server search method, maybe an indexing server
+        # TODO:- Switch to Async await Multithreading
 		for ip in self.ips:
 			r = requests.get(f"http://{ip}:5000/search", params=(("search_tag", tag), 
 																("search_name", name), 
 																("search_hash", hash_val)))
 			print(ip, r.text)
+		
 	
+	def _get_broadcasts(self):
+		'''
+		Gets broadcasts from all servers in the subnet.
+
+		:return void
+		'''
+		for ip in self.ips:
+			r = requests.get(f"http://{ip}:5000/newsFlash")
+			print(colored.green(f"{ip} ==> {r.text}"))
+
+
 	def _fetch_resource(self, url, filename):
 		'''
 		Fetches file from a certain server using hash value.
@@ -66,9 +83,7 @@ class Seeker:
 		'''
 		r = requests.get(url)
 
-    	# If the HTTP GET request can be served
 		if r.status_code == 200:
-        	# Write the file contents in the response to a file specified by local_file_path
 			with open(filename, 'wb') as local_file:
 				for chunk in r.iter_content(chunk_size=128):
 					local_file.write(chunk)

@@ -41,7 +41,7 @@ class Publisher:
 			print(colored.red("[!] No such node."))
 
 	def _publish_media(self, filepath):
-	   self._store_file(filepath, 'media')
+		self._store_file(filepath, 'media')
 
 	def _publish_markdown(self, filepath):
 		self._store_file(filepath, 'markdown')
@@ -68,7 +68,7 @@ class Publisher:
 
 		:return dict - consist of keys ["file", "tag", "hash"]
 		'''
-		text = open(filepath, 'r').read().strip().repalce('\n', '')
+		text = open(filepath, 'r').read().strip().replace('\n', '')
 		text = text.split(' ')
 		tags = list(filter(lambda x: x.startswith('#'), text))
 		print(colored.cyan("\n".join(tags)))
@@ -82,17 +82,19 @@ class Publisher:
 		'''
 		self.tags_db.insert(tag_record)
 
+
 	def _delete(self, filepath):
 		'''
 		Deletes file from computer as well as database using file hash.
 
 		:param filepath - type: str, path of file to be deleted
 		'''
-		# TODO :- delete file from database also
 		if self._check_file(filepath):
 			Path(filepath).unlink()
+			self.files_db.delete_one({"file": filepath})
 			return
 		print(colored.red("[!] No Such File exists!!"))
+
 
 	def _store_file(self, filepath, target_file):
 		'''
@@ -114,7 +116,8 @@ class Publisher:
 		if 'ASCII text' in file_type:
 			tag_record = self._tag_compiler(filepath)
 			self._tag_store(tag_record)
-		
+
+
 	def _check_file(self, filepath):
 		'''
 		Returns if a file at a given path exists
@@ -125,6 +128,7 @@ class Publisher:
 		if Path(filepath).is_file():
 			return True
 		return False
+
 
 	def _sha_file(self, filepath):
 		'''
@@ -145,6 +149,7 @@ class Publisher:
 			print(shall.hexdigest())
 		
 		return shall.hexdigest()
+
 
 	def _sha_str(self, text):
 		'''

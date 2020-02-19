@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 
 from clint.textui import colored
-from daemon import pidfile, DaemonContext
+from daemon import DaemonContext
 from pidlockfile import PIDLockFile
 from signal import SIGTERM
 import os

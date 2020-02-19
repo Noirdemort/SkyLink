@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
 	# parser.add_argument("mode", type=str, choices=["services", "publisher", "seeker"], help="Mode of operation for the skylink")
 
-	subparsers = parser.add_subparsers(help='commands')
+	subparsers = parser.add_subparsers(help='commands', required=True)
 
 	# services = parser.add_argument_group(title='Services options')
 	# publisher = parser.add_argument_group(title='Publisher options')
@@ -78,9 +78,9 @@ if __name__ == "__main__":
 	seeker.add_argument('--fname', help="Filename of downloaded file")
 	seeker_control.add_argument('--search', action='store_true', help="Search a file")
 	seeker_control.add_argument('--fetch', action='store_true', help="Fetch file from specific url, requires --url tag")
-
+	seeker_control.add_argument('--news', action='store_true', help="Fetch broadcast from subnet")
 	# parser.add_argument('-p', '--pid-file', default='/var/run/eg_daemon.pid')
-
+    
 	args = parser.parse_args()
 
 	if args.mode == 'server':
@@ -121,7 +121,7 @@ if __name__ == "__main__":
 				exit(0)
 			data = {}
 			if args.search_hash:
-				data["hash"] = args.search_hashe
+				data["hash"] = args.search_hash
 			else:
 				data["hash"] = None
 			
@@ -138,13 +138,16 @@ if __name__ == "__main__":
 			seeker.process("search", data)
 			
 		elif args.fetch:
-
 			if not (args.url and args.fname):
 				print(colored.red("[!] Both filename and url are required."))
 				exit(0)
+                        
 			data = {"url": args.url, "filename": args.fname}
 			seeker.process("fetch", data)
 
+		elif args.news:
+			seeker.process("news", None)
+		
 	else:
 		print(colored.red("[!] No Such Config!!"))
 

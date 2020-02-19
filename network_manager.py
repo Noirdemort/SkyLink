@@ -8,7 +8,7 @@ class NetworkManager:
 
 	'''
 	Managers network level operations for the client.
-	TODO: Will have support for encryption and more low-level security (if you can figure out what the later one means)
+	TODO: Will have support for encryption and more low-level security (if you can figure out what later one means)
 	'''
 
 	def __init__(self):
