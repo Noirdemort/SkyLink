@@ -4,3 +4,17 @@ File-sharing and communication using routers and internet infrastructure in case
 - disaster
 - banned
 - censorship, etc.
+
+
+## TODO
+
+    - Test the whole suite 
+    - Add HTTPS & TLS Support 
+    - Check compatibility with normal internet
+    
+
+## Future Extensions
+
+    - Implement Tunneling and hiding network traffic
+    - VPN protocols support
+    - TOR integration (I really don't know what I am talking about)
